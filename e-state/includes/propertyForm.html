@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang='en'>
+    <head>
+        <meta charset='UTF-8'>
+        <title>Document</title>
+        <link href="styles\style.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+        <form action='propertyAdd.php' method='post'>
+            <label for='title'>العنوان</label>
+            <input type='text' name='title'>required</br> 
+            <label for='type'>النوع</label>
+            <select name='type'>
+                <option value='1'>بيت مستقل</option>
+                <option value='2'>شقة</option>
+                <option value='3'>عمارة</option>
+                <option value='4'>أرض</option>
+            </select></br>
+            <label for='featured'>ميز عقارك</label>
+            <input type='checkbox' name='featured'></br>
+            <label for='price'>السعر</label>
+            <input type='text' name='price'>required</br>
+            <!--            <label for='image'>صورةالعقار من الخارج</label>
+                        <input type='file' name='image'></br>-->
+            <label for='text'>معلومات إضافية</label>
+            <textarea name="text" rows="10" cols="20"></textarea></br>
+            <label for='country'>الدولة</label>
+            <select name='country'>
+                <option value='1'>الأردن</option>
+                <option value='2'>الإمارات</option>
+                <option value='3'>السعودية</option>
+            </select></br>
+            <label for='city'>المدينة</label>
+            <select name='city'>
+                <option value='إربد'>إربد</option>
+                <option value='عمان'>عمان</option>
+                <option value='الزرقاء'>الزرقاء</option>
+            </select></br>
+            <label for='area_name'>اسم المنطقة</label>
+            <input type='text' name='area_name'></br>
+            <!--        -------------------------------------------------->
+            <section class='villa, flat'>
+                <label for='sell'>بيع</label>
+                <input type='checkbox' name='sell'>
+                <label for='rent'>إيجار</label>
+                <input type='checkbox' name='rent'></br>
+                <label for='contract_duration'>مدة العقد</label>
+                <input type='text' name='contract_duration'>
+                <select name='duration1'>
+                    <option value='ساعة'>ساعة</option>
+                    <option value='يوم'>يوم</option>
+                    <option value='شهر'>شهر</option>
+                    <option value='سنة'>سنة</option>
+                </select></br>
+                <label for='payment_duration'>الدفع كل</label>
+                <input type='text' name='payment_duration'>
+                <select name='duration2'>
+                    <option value='يوم'>يوم</option>
+                    <option value='شهر'>شهر</option>
+                    <option value='سنة'>سنة</option>
+                </select></br>
+                <label for='houseSize'>مساحة البيت</label>
+                <input type='text' name='house_size'></br>
+                <label for='furnished'>مفروش</label>
+                <input type='checkbox' name='furnished'></br>
+                <!--        -------------------------------------------------->
+            </section>
+            <section class='villa ,building'>
+                <label for='levels'>عدد الطوابق</label>
+                <input type='number' name='levels' min='1' max='20'></br>
+            </section>
+            <!--        -------------------------------------------------->
+            <section class='flat, building'>
+                <label for='building_name'>اسم المبنى</label>
+                <input type='text' name='building_name'></br>
+            </section>
+            <!--        -------------------------------------------------->
+            <section class='villa, building, land'>
+                <label for='landSize'>مساحة الأرض</label>
+                <input type='text' name='land_size'></br>
+            </section>
+            <!--        -------------------------------------------------->
+            <section class='villa, building, flat'>
+                <label for='garage'>كراج</label>
+                <input type='checkbox' name='garage'></br>
+            </section>
+            <!--        -------------------------------------------------->
+            <section class ='flat'>
+                <label for='floor'>رقم الطابق</label>
+                <input type='number' name='floor'></br>
+            </section>
+            <input type='submit' value='عرض مسبق' >
+            <input type='submit' value='لصق الإعلان' name='addProperty'>
+        </form>
+
+    </body>
+</html>

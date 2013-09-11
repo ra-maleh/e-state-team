@@ -1,0 +1,15 @@
+/* 
+    Document   : syle
+    Created on : Sep 8, 2013, 3:20:27 AM
+    Author     : Rami
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+
+html {
+    direction:rtl;
+}

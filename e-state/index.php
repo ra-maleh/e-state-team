@@ -6,7 +6,7 @@
     </head>
     <body>
         <?php
-        echo 'second php code';
+        
         ?>
     </body>
 </html>
