@@ -3,55 +3,61 @@ require_once 'includes/dbFunctions.php';
 require_once 'includes/functions.php';
 require_once 'includes/connection.php';
 
-if (isset($_POST['addProperty'])) {
-   $expected = array('title', 'type', 'featured', 'price', 'image',
-       'text', 'offer_type', 'contract_duration',
-       'duration1', 'payment_duration', 'duration2',
-       'levels', 'house_size', 'land_size', 'garage',
-       'furnished', 'floor', 'country', 'city', 'area_name',
-       'building_name');
-   foreach ($expected as $key) {
-      if (!empty($_POST[$key])) {
-         ${$key} = $_POST[$key];
-      } else {
-         ${$key} = NULL;
+if (!$_GET['id']) {
+   echo "didnt get id";
+} else {
+   $propertyId = $_GET['id'];
+   if (isset($_POST['addProperty'])) {
+      $expected = array('title', 'type', 'featured', 'price', 'image',
+          'text', 'offer_type', 'contract_duration',
+          'c_duration', 'payment_duration', 'p_duration',
+          'levels', 'house_size', 'land_size', 'garage',
+          'furnished', 'floor', 'country', 'city', 'area_name',
+          'building_name');
+      foreach ($expected as $key) {
+         if (!empty($_POST[$key])) {
+            mysql_prep($key);
+            ${$key} = $_POST[$key];
+         } else {
+            ${$key} = NULL;
+         }
+      }
+      //convert check-boxes to integers to insert into DB
+      $featured = returnByte($featured);
+      $garage = returnByte($garage);
+      $furnished = returnByte($furnished);
+
+      $query = "UPDATE `e-state`.`properties`"
+              . " SET `title` = '{$title}',"
+              . " `type` = '{$type}', `featured` = {$featured}, `price` = {$price},"
+              . " `text` = '{$text} ', `offer_type` = {$offer_type},`contract_duration` = '{$contract_duration}',"
+              . " `payment_duration` = '{$payment_duration}', `levels` = {$levels}, `house_size` = {$house_size},"
+              . " `furnished` = {$furnished},`garage` = {$garage},`floor` = {$floor},"
+              . " `land_size` = {$land_size}, c_duration = '{$c_duration}', p_duration = '{$p_duration}'"
+              . " WHERE `properties`.`property_id` = {$propertyId}";
+      mysql_query($query);
+      if (!\mysql_affected_rows() === 1) {
+         die("Database query failed: " . mysql_error());
+      }
+
+      $query = "UPDATE  `e-state`.`address`"
+              . " SET  `country` =  {$country}, `building_name` =  '{$building_name}',"
+              . " `city` =  '{$city}',`area_name` =  '{$area_name}'"
+              . " WHERE  `address`.`property_id` = {$propertyId}";
+
+      mysql_query($query);
+      if (!\mysql_affected_rows() === 1) {
+         die("Database query failed: " . mysql_error());
       }
    }
-   //convert check-boxes to integers to insert into DB
-   $featured = returnByte($featured);
-   $garage = returnByte($garage);
-   $furnished = returnByte($furnished);
+   $query = "SELECT *"
+           . " FROM properties, address"
+           . " WHERE properties.property_id = {$propertyId} AND address.property_id = {$propertyId}"; //get property id from GET
 
-   $query = "UPDATE `e-state`.`properties`"
-           . " SET `title` = '{$title}',"
-           . " `type` = '{$type}', `featured` = {$featured}, `price` = {$price},"
-           . " `text` = '{$text} ', `offer_type` = {$offer_type},`contract_duration` = 'سنة 2',"
-           . " `payment_duration` = 'شهر 4', `levels` = {$levels}, `house_size` = {$house_size},"
-           . " `furnished` = {$furnished},`garage` = {$garage},`floor` = {$floor},"
-           . " `land_size` = {$land_size}"
-           . " WHERE `properties`.`property_id` = 123";
-   mysql_query($query);
-   if (!mysql_affected_rows() == 1) {
-      die("Database query failed: " . mysql_error());
-   }
-
-   $query = "UPDATE  `e-state`.`address`"
-           . " SET  `country` =  {$country}, `building_name` =  '{$building_name}',"
-           . " `city` =  '{$city}',`area_name` =  '{$area_name}'"
-           . " WHERE  `address`.`address_id` = 13";
-
-   mysql_query($query);
-   if (!mysql_affected_rows() == 1) {
-      die("Database query failed: " . mysql_error());
-   }
+   $propertySet = mysql_query($query);
+   confirm_query($propertySet);
+   $row = mysql_fetch_assoc($propertySet);
 }
-$query = "SELECT *"
-        . " FROM properties, address"
-        . " WHERE properties.property_id = 123 AND address.property_id = 123"; //get property id from GET
-
-$propertySet = mysql_query($query);
-confirm_query($propertySet);
-$row = mysql_fetch_assoc($propertySet);
 ?>
 <!doctype html>
 <html lang='en'>
@@ -61,7 +67,7 @@ $row = mysql_fetch_assoc($propertySet);
       <link href="styles\style.css" rel="stylesheet" type="text/css" />
    </head>
    <body>
-      <form action='propertyEdit.php' method='post'>
+      <form action='propertyEdit.php?id=<?php echo $propertyId; ?>' method='post'>
          <label for='title'>العنوان</label>
          <input type='text' name='title' value="<?php echo $row['title']; ?>">required</br> 
          <label for='type'>النوع</label>
@@ -99,18 +105,18 @@ $row = mysql_fetch_assoc($propertySet);
             <input type="radio" name="offer_type" value="2" <?php if ($row['offer_type'] == 2) echo "checked"; ?>>إيجار</br>
             <label for='contract_duration'>مدة العقد</label>
             <input type='text' name='contract_duration' value="<?php echo $row['contract_duration']; ?>">
-            <select name='duration1'>
-               <option value='ساعة'>ساعة</option>
-               <option value='يوم'>يوم</option>
-               <option value='شهر'>شهر</option>
-               <option value='سنة'>سنة</option>
+            <select name='c_duration'>
+               <option value='1'>ساعة</option>
+               <option value='2'>يوم</option>
+               <option value='3'>شهر</option>
+               <option value='4'>سنة</option>
             </select></br>
             <label for='payment_duration'>الدفع كل</label>
             <input type='text' name='payment_duration' value="<?php echo $row['payment_duration']; ?>">
-            <select name='duration2'>
-               <option value='يوم'>يوم</option>
-               <option value='شهر'>شهر</option>
-               <option value='سنة'>سنة</option>
+            <select name='p_duration'>
+               <option value='1'>يوم</option>
+               <option value='2'>شهر</option>
+               <option value='3'>سنة</option>
             </select></br>
             <label for='houseSize'>مساحة البيت</label>
             <input type='text' name='house_size' value="<?php echo $row['house_size']; ?>"></br>
@@ -135,7 +141,7 @@ $row = mysql_fetch_assoc($propertySet);
          <!--        -------------------------------------------------->
          <section class='villa, building, flat'>
             <label for='garage'>كراج</label>
-            <input type='checkbox' name='garage'></br>
+            <input type='checkbox' name='garage' <?php if ($row['garage'] == 1) echo "checked" ?>></br>
          </section>
          <!--        -------------------------------------------------->
          <section class ='flat'>

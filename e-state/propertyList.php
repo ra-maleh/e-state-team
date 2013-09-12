@@ -32,7 +32,7 @@ require_once 'includes/connection.php';
                <th><?php
                   $query = "SELECT *"
                           . " FROM properties"
-                  //. " WHERE properties.user_id = " . $_SESSION['user_id']"
+                          //. " WHERE properties.user_id = " . $_SESSION['user_id']"
                           . " ORDER BY date DESC"
                   ;
                   $propertySet = mysql_query($query);
@@ -42,10 +42,10 @@ require_once 'includes/connection.php';
                      echo $row['type'] . "</th><th>" . $row['title']
                      . "</th><th>" . $row['date'] . "</th><th>"
                      . $row['depricated'] . "</th><th>" . $row['featured']
-                     . "</th><th><a href=#><img src='images/delete.png'>
-                                    </a></th><th><a href='propertyEdit.php'><img src='images/edit.png'>
-                                    </a></th><th><a href=#><img src='images/refresh.png'>
-                                    </a></th></tr><tr><th>";
+                  . "</th><th><a href=#?id={$row['property_id']}><img src='images/delete.png'>"
+                  . "</a></th><th><a href='propertyEdit.php?id={$row['property_id']}'><img src='images/edit.png'>"
+                     . "</a></th><th><a href=#?id={$row['property_id']}><img src='images/refresh.png?id='>"
+                     . "</a></th></tr><tr><th>";
                   }
                   ?>
 

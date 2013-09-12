@@ -9,12 +9,13 @@ require_once 'includes/connection.php';
 if (isset($_POST['addProperty'])) {
    $expected = array('title', 'type', 'featured', 'price', 'image',
        'text', 'offer_type', 'contract_duration',
-       'duration1', 'payment_duration', 'duration2',
+       'c_duration', 'payment_duration', 'p_duration',
        'levels', 'house_size', 'land_size', 'garage',
        'furnished', 'floor', 'country', 'city', 'area_name',
        'building_name');
    foreach ($expected as $key) {
       if (!empty($_POST[$key])) {
+         mysql_prep($key);
          ${$key} = $_POST[$key];
       } else {
          ${$key} = NULL;
@@ -25,22 +26,17 @@ if (isset($_POST['addProperty'])) {
    $garage = returnByte($garage);
    $furnished = returnByte($furnished);
 
-
-//concatenate duration text-field and contract/payment_duration drop-down-list
-   $contract_duration = $duration1 . " " . $contract_duration;
-   $payment_duration = $duration2 . " " . $payment_duration;
-
    $query = "INSERT INTO properties(user_id, title, type, featured, price,"
-           . " text, offer_type, contract_duration,"
-           . " payment_duration, garage,furnished,"
+           . " text, offer_type, contract_duration, c_duration,"
+           . " payment_duration, p_duration, garage,furnished, date,"
            . " levels,"
            . " house_size,"
            . " land_size,"
            . " floor)"
-           //beware image, date ,session user
+           //beware image ,session user
            . " VALUES(3,'{$title}', {$type} , {$featured}, {$price}, "
-           . "'{$text}', {$offer_type}, '{$contract_duration}',"
-           . "'{$payment_duration}',{$garage},{$furnished}";
+           . "'{$text}', '{$offer_type}', '{$contract_duration}', {$c_duration},"
+           . "'{$payment_duration}', {$p_duration}, {$garage}, {$furnished}, CURRENT_TIME()";
    allowInQuery($levels);
    allowInQuery($house_size);
    allowInQuery($land_size);
@@ -103,18 +99,18 @@ if (isset($_POST['addProperty'])) {
             <input type="radio" name="offer_type" value="2">إيجار</br>
             <label for='contract_duration'>مدة العقد</label>
             <input type='text' name='contract_duration'>
-            <select name='duration1'>
-               <option value='ساعة'>ساعة</option>
-               <option value='يوم'>يوم</option>
-               <option value='شهر'>شهر</option>
-               <option value='سنة'>سنة</option>
+            <select name='c_duration'>
+               <option value='1'>ساعة</option>
+               <option value='2'>يوم</option>
+               <option value='3'>شهر</option>
+               <option value='4'>سنة</option>
             </select></br>
             <label for='payment_duration'>الدفع كل</label>
             <input type='text' name='payment_duration'>
-            <select name='duration2'>
-               <option value='يوم'>يوم</option>
-               <option value='شهر'>شهر</option>
-               <option value='سنة'>سنة</option>
+            <select name='p_duration'>
+               <option value='1'>يوم</option>
+               <option value='2'>شهر</option>
+               <option value='3'>سنة</option>
             </select></br>
             <label for='houseSize'>مساحة البيت</label>
             <input type='text' name='house_size'></br>
